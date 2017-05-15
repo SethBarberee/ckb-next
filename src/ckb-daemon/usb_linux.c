@@ -295,7 +295,7 @@ int os_setupusb(usbdevice* kb){
         sscanf(ep_str, "%d", &kb->epcount);
     if(kb->epcount == 0){
         // This shouldn't happen, but if it does, assume EP count based on what the device is supposed to have
-        kb->epcount = (HAS_FEATURES(kb, FEAT_RGB) ? 4 : 3);
+        kb->epcount = (IS_HEADSET_DEV(kb) ? 4 : (HAS_FEATURES(kb, FEAT_RGB) ? 4 : 3));
         ckb_warn("Unable to read endpoint count from udev, assuming %d...\n", kb->epcount);
     }
     if(usbclaim(kb)){
@@ -381,7 +381,9 @@ static _model models[] = {
     { P_SABRE_N_STR, P_SABRE_N },
     { P_SCIMITAR_STR, P_SCIMITAR },
     { P_SCIMITAR_PRO_STR, P_SCIMITAR_PRO },
-    { P_SABRE_O2_STR, P_SABRE_O2 }
+    { P_SABRE_O2_STR, P_SABRE_O2 },
+    // Headset
+    {P_VOID_STR, P_VOID}
 };
 #define N_MODELS (sizeof(models) / sizeof(_model))
 
