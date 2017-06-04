@@ -39,7 +39,7 @@ const char* product_str(short product){
     if(product == P_SCIMITAR || product == P_SCIMITAR_PRO)
         return "scimitar";
     if(product == P_VOID)
-	return "void";
+        return "void";
     return "";
 }
 
@@ -47,14 +47,15 @@ const char* product_str(short product){
 static const devcmd* get_vtable(short vendor, short product){
 //    return IS_MOUSE(vendor, product) ? &vtable_mouse : IS_RGB(vendor, product) ? &vtable_keyboard : &vtable_keyboard_nonrgb;
     if(IS_MOUSE(vendor,product))
-	return &vtable_mouse;
+	    return &vtable_mouse;
     else if(IS_HEADSET(vendor,product))
-	return &vtable_headset;
+	    return &vtable_headset;
     else {
-	if(IS_RGB(vendor,product))
+	 if(IS_RGB(vendor,product))
 	    return &vtable_keyboard;
-	else
+	 else {
 	    return &vtable_keyboard_nonrgb;
+   }
  }
 }
 

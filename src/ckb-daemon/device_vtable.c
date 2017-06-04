@@ -198,7 +198,7 @@ const devcmd vtable_headset = {
     .snap = cmd_none,
 
     .notify = cmd_notify,
-    .inotify = cmd_inotify,
+    .inotify = cmd_none,
     .get = cmd_get,
 
     .start = start_dev,
@@ -207,6 +207,6 @@ const devcmd vtable_headset = {
     .loadprofile = loadprofile,
     .freeprofile = freeprofile,
     .updatergb = updatergb_kb,
-    .updateindicators = updateindicators_kb,
+    .updateindicators = int1_void_none,
     .updatedpi = int1_int_none
 };
