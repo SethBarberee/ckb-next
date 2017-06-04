@@ -121,13 +121,13 @@ void* os_inputmain(void* context){
 		  // remove all endpoints except the last one for Headsets
 		  if((urbs[i].endpoint != 0x84)){
 		     // This is for debugging purposes only
-             ckb_info("Deleting an audio endpoint\n");
-		     urbs[i] = urbs[i+1];
+				ckb_info("Deleting an audio endpoint\n");
+				urbs[i] = urbs[i+1];
 		  } else {
-		    urbs[i].type = USBDEVFS_URB_TYPE_INTERRUPT;
-            urbs[i].endpoint = 0x84;
-            urbs[i].buffer = malloc(urbs[i].buffer_length);
-            ioctl(fd, USBDEVFS_SUBMITURB, urbs + i);
+				  urbs[i].type = USBDEVFS_URB_TYPE_INTERRUPT;
+				  urbs[i].endpoint = 0x84;
+				  urbs[i].buffer = malloc(urbs[i].buffer_length);
+				  ioctl(fd, USBDEVFS_SUBMITURB, urbs + i);
 		  }
 		}
      } else {
