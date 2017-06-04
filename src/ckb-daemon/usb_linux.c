@@ -99,7 +99,7 @@ void* os_inputmain(void* context){
 
     // Monitor input transfers on all endpoints for non-RGB devices
     // For RGB, monitor all but the last, as it's used for input/output
-    int urbcount = IS_RGB(vendor, product) ? (kb->epcount - 1) : kb->epcount;
+    int urbcount = IS_HEADSET(vendor,product) ? kb->epcount : IS_RGB(vendor, product) ? (kb->epcount - 1) : kb->epcount;
     struct usbdevfs_urb urbs[urbcount];
     memset(urbs, 0, sizeof(urbs));
     urbs[0].buffer_length = 8;
@@ -116,12 +116,28 @@ void* os_inputmain(void* context){
         urbs[2].buffer_length = 15;
     }
     // Submit URBs
-    for(int i = 0; i < urbcount; i++){
+	if(IS_HEADSET(vendor,product)){
+        for(int i = 0; i < urbcount; i++){
+		  // remove all endpoints except the last one for Headsets
+		  if((urbs[i].endpoint != 0x84)){
+		     // This is for debugging purposes only
+             ckb_info("Deleting an audio endpoint\n");
+		     urbs[i] = urbs[i+1];
+		  } else {
+		    urbs[i].type = USBDEVFS_URB_TYPE_INTERRUPT;
+            urbs[i].endpoint = 0x84;
+            urbs[i].buffer = malloc(urbs[i].buffer_length);
+            ioctl(fd, USBDEVFS_SUBMITURB, urbs + i);
+		  }
+		}
+     } else {
+     for(int i = 0; i < urbcount; i++){
         urbs[i].type = USBDEVFS_URB_TYPE_INTERRUPT;
         urbs[i].endpoint = 0x80 | (i + 1);
         urbs[i].buffer = malloc(urbs[i].buffer_length);
         ioctl(fd, USBDEVFS_SUBMITURB, urbs + i);
-    }
+     }
+   }
     // Start monitoring input
     while(1){
         struct usbdevfs_urb* urb = 0;
